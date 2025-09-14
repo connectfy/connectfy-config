@@ -1,0 +1,134 @@
+#!/bin/bash
+
+# Define the base path for directories
+path="/home/$(whoami)/Desktop/bms_v2/"
+
+# Countdown function to display remaining seconds
+countdown() {
+  local seconds=$1
+  echo -e "\nCountdown started: $seconds seconds remaining."
+  while [ $seconds -gt 0 ]; do
+    echo -ne "Time left: $seconds seconds...\033[0K\r"
+    sleep 1
+    : $((seconds--))
+  done
+  echo -e "\nCountdown complete.\n"
+}
+
+
+echo -e "\nStarting Docker..."
+sudo systemctl start docker
+echo -e "Waiting for Docker to initialize...\n"
+echo -e "===================================================================="
+echo -e "====================================================================\n"
+countdown 20
+
+
+echo -e "Stopping all running Docker containers...\n"
+
+if docker stop $(docker ps -q) > /dev/null 2>&1; then
+  echo -e "All running containers stopped successfully.\n"
+else
+  echo -e "No running containers to stop or an error occurred.\n"
+fi
+
+echo -e "===================================================================="
+echo -e "====================================================================\n"
+
+
+countdown 5
+
+
+echo -e "Starting Kafka services...\n"
+cd "${path}bmsv2-config" && docker compose -f kafka-compose.yml up -d
+echo -e "Kafka services are now running.\n"
+echo -e "===================================================================="
+echo -e "====================================================================\n"
+countdown 20
+
+
+echo -e "Starting bmsv2-auth service in a new Terminal tab...\n"
+gnome-terminal --tab --title="bmsv2-auth" -- bash -c "cd ${path}bmsv2-auth && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f auth-service; exec bash"
+echo -e "===================================================================="
+echo -e "====================================================================\n"
+countdown 10
+
+
+echo -e "Starting bmsv2-permissions service in a new Terminal tab...\n"
+gnome-terminal --tab --title="bmsv2-permissions" -- bash -c "cd ${path}bmsv2-permissions && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f permission-service; exec bash"
+echo -e "===================================================================="
+echo -e "====================================================================\n"
+countdown 10
+
+
+echo -e "Starting bmsv2-crm service in a new Terminal tab...\n"
+gnome-terminal --tab --title="bmsv2-crm" -- bash -c "cd ${path}bmsv2-crm && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f crm-service; exec bash"
+echo -e "===================================================================="
+echo -e "====================================================================\n"
+countdown 10
+
+
+echo -e "Starting bmsv2-store-management service in a new Terminal tab...\n"
+gnome-terminal --tab --title="bmsv2-store-management" -- bash -c "cd ${path}bmsv2-store-management && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f store-management-service; exec bash"
+echo -e "===================================================================="
+echo -e "====================================================================\n"
+countdown 10
+
+
+
+# echo -e "Starting bmsv2-import-export service in a new Terminal tab...\n"
+# gnome-terminal --tab --title="bmsv2-import-export" -- bash -c "cd ${path}bmsv2-import-export && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f import-export-service; exec bash"
+# echo -e "===================================================================="
+# echo -e "====================================================================\n"
+# countdown 10
+
+
+echo -e "Starting bmsv2-notification-action-history service in a new Terminal tab...\n"
+gnome-terminal --tab --title="bmsv2-notification-action-history" -- bash -c "cd ${path}bmsv2-notification-action-history && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f notification-action-history-service; exec bash"
+echo -e "===================================================================="
+echo -e "====================================================================\n"
+countdown 10
+
+
+echo -e "Starting bmsv2-api-gateway service in a new Terminal tab...\n"
+gnome-terminal --tab --title="bmsv2-api-gateway" -- bash -c "cd ${path}bmsv2-api-gateway && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f api-gateway; exec bash"
+echo -e "===================================================================="
+echo -e "====================================================================\n"
+countdown 10
+
+echo -e "Starting bmsv2-client in a new Terminal tab...\n"
+gnome-terminal --tab --title="bmsv2-client" -- bash -c "cd ${path}bmsv2-client && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f client"
+echo -e "===================================================================="
+echo -e "====================================================================\n"
+countdown 30
+
+
+# echo -e "Starting Minio service...\n"
+# cd "${path}bmsv2-fileuploader" && docker compose -f minio-compose.yml up -d
+# echo -e "Minio service is now running.\n"
+# echo -e "===================================================================="
+# echo -e "====================================================================\n"
+# countdown 5
+
+
+# echo -e "Starting File Uploader application in a new Terminal tab...\n"
+# gnome-terminal --tab -- bash -c "cd ${path}bmsv2-fileuploader && npx nodemon app.js; exec bash"
+# echo -e "===================================================================="
+# echo -e "====================================================================\n"
+# countdown 10
+
+
+# echo -e "Starting NGROK server in a new Terminal tab...\n"
+# gnome-terminal --tab -- bash -c "cd ${path}bmsv2-fileuploader && ngrok http http://localhost:9003; exec bash"
+# echo -e "===================================================================="
+# echo -e "====================================================================\n"
+# countdown 20
+
+
+# echo -e "Opening Postman application...\n"
+# xdg-open "postman://"
+# echo -e "===================================================================="
+# echo -e "====================================================================\n"
+
+# Final log message
+echo -e "\nAll tasks completed successfully! All services are now running.\n"

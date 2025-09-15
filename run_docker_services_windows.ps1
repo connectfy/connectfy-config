@@ -132,7 +132,7 @@
 $ErrorActionPreference = 'Stop'  # səhv olanda dayan
 
 # Desktop path (lokal dilə görə düzgün gələcək)
-$desktop = [Environment]::GetFolderPath('Desktop')
+$desktop = 'C:\Users\mehed\Desktop'
 $basePath = Join-Path $desktop 'Connectfy'
 
 if (-not (Test-Path $basePath)) {
@@ -196,13 +196,13 @@ Countdown 5
 # =========================
 $services = @{
     "connectfy-config"         = "kafka-compose.yml"
-    # "connectfy-auth"           = "docker-compose.dev.yml"
-    # "connectfy-account"        = "docker-compose.dev.yml"
-    # "connectfy-notifications"  = "docker-compose.dev.yml"
-    # "connectfy-relationships"  = "docker-compose.dev.yml"
-    # "connectfy-messenger"      = "docker-compose.dev.yml"
+    "connectfy-auth"           = "docker-compose.dev.yml"
+    "connectfy-account"        = "docker-compose.dev.yml"
+    "connectfy-notifications"  = "docker-compose.dev.yml"
+    "connectfy-relationships"  = "docker-compose.dev.yml"
+    "connectfy-messenger"      = "docker-compose.dev.yml"
     "connectfy-api-gateway"    = "docker-compose.dev.yml"
-    # "connectfy-client"         = "docker-compose.dev.yml"
+    "connectfy-client"         = "docker-compose.dev.yml"
 }
 
 # =========================

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the base path for directories
-path="/home/$(whoami)/Desktop/connectfy/"
+path="/home/$(whoami)/Desktop/Connectfy/"
 
 # Countdown function to display remaining seconds
 countdown() {
@@ -55,28 +55,28 @@ countdown 10
 
 
 echo -e "Starting connectfy-notifications service in a new Terminal tab...\n"
-gnome-terminal --tab --title="connectfy-notifications" -- bash -c "cd ${path}connectfy-notifications && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f notification-service; exec bash"
+gnome-terminal --tab --title="connectfy-notifications" -- bash -c "cd ${path}connectfy-notifications && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f notifications-service; exec bash"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 10
 
 
 echo -e "Starting connectfy-account service in a new Terminal tab...\n"
-gnome-terminal --tab --title="connectfy-account" -- bash -c "cd ${path}connectfy-account && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f notification-service; exec bash"
+gnome-terminal --tab --title="connectfy-account" -- bash -c "cd ${path}connectfy-account && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f account-service; exec bash"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 10
 
 
 echo -e "Starting connectfy-relationships service in a new Terminal tab...\n"
-gnome-terminal --tab --title="connectfy-relationships" -- bash -c "cd ${path}connectfy-relationships && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f notification-service; exec bash"
+gnome-terminal --tab --title="connectfy-relationships" -- bash -c "cd ${path}connectfy-relationships && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f relationships-service; exec bash"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 10
 
 
 echo -e "Starting connectfy-messenger service in a new Terminal tab...\n"
-gnome-terminal --tab --title="connectfy-notifications" -- bash -c "cd ${path}connectfy-messenger && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f notification-service; exec bash"
+gnome-terminal --tab --title="connectfy-messenger" -- bash -c "cd ${path}connectfy-messenger && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f messenger-service; exec bash"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 10

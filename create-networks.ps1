@@ -1,12 +1,12 @@
 # create-networks.ps1
 $networks = @(
-  'kafka_network',
-  'api-gateway-network',
-  'auth-network',
-  'messenger-network',
-  'relationships-network',
-  'account-network',
-  'notifications-network'
+  'connectfy_kafka_network',
+  'connectfy-api-gateway-network',
+  'connectfy-auth-network',
+  'connectfy-messenger-network',
+  'connectfy-relationships-network',
+  'connectfy-account-network',
+  'connectfy-notifications-network'
 )
 
 foreach ($n in $networks) {

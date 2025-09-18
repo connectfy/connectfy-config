@@ -23,9 +23,9 @@ services:
       kafka-1:
         condition: service_healthy
     networks:
-      - api-gateway-network
-      - kafka_network
-      - auth-network
+      - connectfy-api-gateway-network
+      - connectfy_kafka_network
+      - connectfy-auth-network
     ports:
       - "3000:3000"
     volumes:
@@ -37,7 +37,7 @@ services:
   #   image: postgres
   #   restart: always
   #   networks:
-  #     - auth-network
+  #     - connectfy-auth-network
   #   environment:
   #     POSTGRES_DB: userdb
   #     POSTGRES_USER: user
@@ -51,7 +51,7 @@ services:
   #     dockerfile: Dockerfile
   #   restart: always
   #   networks:
-  #     - auth-network
+  #     - connectfy-auth-network
   #   depends_on:
   #     - user-db
   #   environment:
@@ -99,8 +99,8 @@ services:
   #   restart: always
   #   networks:
   #     - product-network
-  #     - api-gateway-network
-  #     - kafka_network
+  #     - connectfy-api-gateway-network
+  #     - connectfy_kafka_network
   #   depends_on:
   #     - product-db
   #     - product-db-slave
@@ -121,9 +121,9 @@ services:
 
 
 networks:
-  api-gateway-network:
-  kafka_network:
-  auth-network:
+  connectfy-api-gateway-network:
+  connectfy_kafka_network:
+  connectfy-auth-network:
   # product-network:
   # order-network:
   # image-service-network:

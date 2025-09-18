@@ -22,7 +22,7 @@ services:
       - kafka_0_data:/bitnami/kafka
       - ./init-topics.sh:/init-topics.sh
     networks:
-      - kafka_network
+      - connectfy_kafka_network
     command: >
       bash -c "
         # Запуск Kafka в фоне
@@ -55,10 +55,10 @@ services:
     volumes:
       - kafka_1_data:/bitnami/kafka
     networks:
-      - kafka_network
+      - connectfy_kafka_network
 
   kafka-ui:
-    container_name: kafka-ui
+    container_name: connectfy-kafka-ui
     image: provectuslabs/kafka-ui:latest
     volumes:
       - ./config.yml:/etc/kafkaui/dynamic_config.yaml
@@ -68,7 +68,7 @@ services:
       - kafka-0
       - kafka-1
     networks:
-      - kafka_network
+      - connectfy_kafka_network
     ports:
       - '8080:8080'
     healthcheck:
@@ -78,7 +78,7 @@ services:
       retries: 3
 
 networks:
-  kafka_network:
+  connectfy_kafka_network:
     external: true
 
 volumes:

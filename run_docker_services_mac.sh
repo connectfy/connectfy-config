@@ -83,8 +83,8 @@ countdown 10
 # countdown 10
 
 
-echo -e "Starting bmsv2-notification-action-history service in a new Terminal tab...\n"
-gnome-terminal --tab --title="bmsv2-notification-action-history" -- bash -c "cd ${path}bmsv2-notification-action-history && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f notification-action-history-service; exec bash"
+echo -e "Starting bmsv2-connectfy-notification service in a new Terminal tab...\n"
+gnome-terminal --tab --title="bmsv2-connectfy-notification" -- bash -c "cd ${path}bmsv2-connectfy-notification && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f connectfy-notification-service; exec bash"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 10

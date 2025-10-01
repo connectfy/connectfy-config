@@ -1,0 +1,88 @@
+# version: '3'
+
+services:
+  kafka-0:
+    image: bitnami/kafka:latest
+    environment:
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CFG_LISTENER_NAME: PLAINTEXT
+      KAFKA_KRAFT_CLUSTER_ID: abcdefghijklmnopqrstuv
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka-0:9093,1@kafka-1:9093
+      KAFKA_CFG_PROCESS_ROLES: controller,broker
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_ZOOKEEPER_METADATA_MIGRATION_ENABLE: 'false'
+      KAFKA_CFG_NODE_ID: 0  # Уникальный идентификатор для этого узла
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka-0:9092 --list" ]
+      interval: 10s
+      timeout: 2s
+      retries: 15
+    volumes:
+      - kafka_0_data:/bitnami/kafka
+      - ./init-topics.sh:/init-topics.sh
+    networks:
+      - connectfy_kafka_network
+    command: >
+      bash -c "
+        # Запуск Kafka в фоне
+        /opt/bitnami/scripts/kafka/run.sh &
+        # Ожидание запуска брокера
+        sleep 10;
+        # Выполнение скрипта создания топиков
+        bash /init-topics.sh;
+        # Ожидание завершения работы
+        wait
+      "   
+
+  kafka-1:
+    image: bitnami/kafka:latest
+    environment:
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CFG_LISTENER_NAME: PLAINTEXT
+      KAFKA_KRAFT_CLUSTER_ID: abcdefghijklmnopqrstuv
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka-0:9093,1@kafka-1:9093
+      KAFKA_CFG_PROCESS_ROLES: controller,broker
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_ZOOKEEPER_METADATA_MIGRATION_ENABLE: 'false'
+      KAFKA_CFG_NODE_ID: 1  # Уникальный идентификатор для этого узла
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka-1:9092 --list" ]
+      interval: 10s
+      timeout: 2s
+      retries: 15
+    volumes:
+      - kafka_1_data:/bitnami/kafka
+    networks:
+      - connectfy_kafka_network
+
+  kafka-ui:
+    container_name: connectfy-kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    volumes:
+      - ./config.yml:/etc/kafkaui/dynamic_config.yaml
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+    depends_on:
+      - kafka-0
+      - kafka-1
+    networks:
+      - connectfy_kafka_network
+    ports:
+      - '8080:8080'
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka-0:9092 --list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  connectfy_kafka_network:
+    external: true
+
+volumes:
+  kafka_0_data:
+    driver: local
+  kafka_1_data:
+    driver: local

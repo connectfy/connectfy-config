@@ -47,6 +47,24 @@ echo -e "====================================================================\n"
 countdown 20
 
 
+# Initialize Kafka topics
+echo -e "Creating Kafka topics...\n"
+cd "${path}bmsv2-config" && chmod +x init-topics.sh && ./init-topics.sh
+echo -e "Kafka topics created.\n"
+echo -e "===================================================================="
+echo -e "====================================================================\n"
+countdown 20
+
+
+# Initialize Kafka topics
+echo -e "Initializing Kafka topics...\n"
+cd "${path}bmsv2-config" && chmod +x init-topics.sh && ./init-topics.sh
+echo -e "Kafka topics initialized successfully.\n"
+echo -e "===================================================================="
+echo -e "====================================================================\n"
+countdown 20
+
+
 echo -e "Starting connectfy-auth service in a new Terminal tab...\n"
 gnome-terminal --tab --title="connectfy-auth" -- bash -c "cd ${path}connectfy-auth && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f auth-service; exec bash"
 echo -e "===================================================================="

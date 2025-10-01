@@ -2,83 +2,107 @@
 
 services:
   kafka-0:
-    image: bitnami/kafka:latest
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka-0
+    container_name: kafka-0
     environment:
-      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
-      KAFKA_CFG_LISTENER_NAME: PLAINTEXT
-      KAFKA_KRAFT_CLUSTER_ID: abcdefghijklmnopqrstuv
-      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka-0:9093,1@kafka-1:9093
-      KAFKA_CFG_PROCESS_ROLES: controller,broker
-      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_CFG_ZOOKEEPER_METADATA_MIGRATION_ENABLE: 'false'
-      KAFKA_CFG_NODE_ID: 0  # Уникальный идентификатор для этого узла
+      # --- KRaft core ---
+      KAFKA_PROCESS_ROLES: controller,broker
+      KAFKA_NODE_ID: 0
+      CLUSTER_ID: PZXjiY7gQvedV8UKu_RsSw
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 0@kafka-0:9093,1@kafka-1:9093
+
+      # --- Listeners / protocols ---
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-0:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+      # --- Required internal topics (RF tuned for 2 brokers) ---
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 2
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+
+      # --- Storage dir (Confluent default path) ---
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+
+      # --- Disable ZK migration (stays KRaft-only) ---
+      KAFKA_ZOOKEEPER_METADATA_MIGRATION_ENABLE: 'false'
     healthcheck:
-      test: [ "CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka-0:9092 --list" ]
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server kafka-0:9092 --list >/dev/null 2>&1"]
       interval: 10s
-      timeout: 2s
+      timeout: 3s
       retries: 15
     volumes:
-      - kafka_0_data:/bitnami/kafka
-      - ./init-topics.sh:/init-topics.sh
+      - kafka_0_data:/var/lib/kafka/data
     networks:
-      - connectfy_kafka_network
-    command: >
-      bash -c "
-        # Запуск Kafka в фоне
-        /opt/bitnami/scripts/kafka/run.sh &
-        # Ожидание запуска брокера
-        sleep 10;
-        # Выполнение скрипта создания топиков
-        bash /init-topics.sh;
-        # Ожидание завершения работы
-        wait
-      "   
+      - kafka_network
 
   kafka-1:
-    image: bitnami/kafka:latest
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka-1
+    container_name: kafka-1
     environment:
-      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
-      KAFKA_CFG_LISTENER_NAME: PLAINTEXT
-      KAFKA_KRAFT_CLUSTER_ID: abcdefghijklmnopqrstuv
-      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka-0:9093,1@kafka-1:9093
-      KAFKA_CFG_PROCESS_ROLES: controller,broker
-      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_CFG_ZOOKEEPER_METADATA_MIGRATION_ENABLE: 'false'
-      KAFKA_CFG_NODE_ID: 1  # Уникальный идентификатор для этого узла
+      # --- KRaft core ---
+      KAFKA_PROCESS_ROLES: controller,broker
+      KAFKA_NODE_ID: 1
+      CLUSTER_ID: PZXjiY7gQvedV8UKu_RsSw
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 0@kafka-0:9093,1@kafka-1:9093
+
+      # --- Listeners / protocols ---
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+      # --- Internal topics & replication (match broker-0) ---
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 2
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+
+      # --- Storage dir ---
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+
+      KAFKA_ZOOKEEPER_METADATA_MIGRATION_ENABLE: 'false'
     healthcheck:
-      test: [ "CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka-1:9092 --list" ]
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server kafka-1:9092 --list >/dev/null 2>&1"]
       interval: 10s
-      timeout: 2s
+      timeout: 3s
       retries: 15
     volumes:
-      - kafka_1_data:/bitnami/kafka
+      - kafka_1_data:/var/lib/kafka/data
     networks:
-      - connectfy_kafka_network
+      - kafka_network
 
   kafka-ui:
-    container_name: connectfy-kafka-ui
+    container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
-    volumes:
-      - ./config.yml:/etc/kafkaui/dynamic_config.yaml
+    ports:
+      - '8080:8080'
     environment:
       DYNAMIC_CONFIG_ENABLED: 'true'
+    volumes:
+      - ./config.yml:/etc/kafkaui/dynamic_config.yaml
     depends_on:
       - kafka-0
       - kafka-1
     networks:
-      - connectfy_kafka_network
-    ports:
-      - '8080:8080'
+      - kafka_network
+    # Use HTTP health endpoint exposed by Kafka UI
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka-0:9092 --list"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"'"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
 
 networks:
-  connectfy_kafka_network:
+  kafka_network:
     external: true
 
 volumes:

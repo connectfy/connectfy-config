@@ -1,0 +1,15 @@
+auth.account.deleteAccount.completed
+auth.account.deleteSocialLink.completed
+auth.account.deletePrivacySetting.completed
+auth.relationship.deleteBlocklist.completed
+auth.relationship.deleteFriendship.completed
+auth.notification.deleteNotifications.completed
+
+mail.send
+notification.deleteNotifications
+
+account.deleteAccount.create
+account.deleteSocialLink.create
+account.deletePrivacySetting.create
+relationship.deleteBlocklist.create
+relationship.deleteFriendship.create

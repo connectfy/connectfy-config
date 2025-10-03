@@ -39,7 +39,7 @@ services:
     volumes:
       - kafka_0_data:/var/lib/kafka/data
     networks:
-      - kafka_network
+      - connectfy_kafka_network
 
   kafka-1:
     image: confluentinc/cp-kafka:latest
@@ -78,7 +78,7 @@ services:
     volumes:
       - kafka_1_data:/var/lib/kafka/data
     networks:
-      - kafka_network
+      - connectfy_kafka_network
 
   kafka-ui:
     container_name: kafka-ui
@@ -93,7 +93,7 @@ services:
       - kafka-0
       - kafka-1
     networks:
-      - kafka_network
+      - connectfy_kafka_network
     # Use HTTP health endpoint exposed by Kafka UI
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"'"]
@@ -102,7 +102,7 @@ services:
       retries: 5
 
 networks:
-  kafka_network:
+  connectfy_kafka_network:
     external: true
 
 volumes:

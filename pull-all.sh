@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the base path for repositories
-BASE_PATH="/home/$(whoami)/Desktop/connectfy/"
+BASE_PATH="/home/$(whoami)/Desktop/Connectfy/"
 
 # Define all your project folders here
 projects=(

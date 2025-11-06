@@ -57,12 +57,12 @@ countdown 20
 
 
 # Initialize Kafka topics
-echo -e "Initializing Kafka topics...\n"
-cd "${path}connectfy-config" && chmod +x init-topics.sh && ./init-topics.sh
-echo -e "Kafka topics initialized successfully.\n"
-echo -e "===================================================================="
-echo -e "====================================================================\n"
-countdown 20
+# echo -e "Initializing Kafka topics...\n"
+# cd "${path}connectfy-config" && chmod +x init-topics.sh && ./init-topics.sh
+# echo -e "Kafka topics initialized successfully.\n"
+# echo -e "===================================================================="
+# echo -e "====================================================================\n"
+# countdown 20
 
 
 echo -e "Starting connectfy-auth service in a new Terminal tab...\n"

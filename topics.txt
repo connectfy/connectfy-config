@@ -8,8 +8,11 @@ auth.notification.deleteNotifications.completed
 mail.send
 notification.deleteNotifications
 
+account.general-settings.remove
+account.notification-settings.remove
 account.deleteAccount.create
 account.deleteSocialLink.create
 account.deletePrivacySetting.create
+
 relationship.deleteBlocklist.create
 relationship.deleteFriendship.create

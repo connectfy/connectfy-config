@@ -12,6 +12,7 @@ account.general-settings.remove
 account.notification-settings.remove
 account.deleteAccount.create
 account.deleteSocialLink.create
+account.privacy-settings.remove
 account.deletePrivacySetting.create
 
 relationship.deleteBlocklist.create

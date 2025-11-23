@@ -7,17 +7,25 @@ i18n_projects=(
   "connectfy-account"
   "connectfy-notifications"
   "connectfy-client"
+  "connectfy-api-gateway"
+  "connectfy-shared"
 )
 
 echo -e "\n===================================================================="
-echo -e "🌐 Updating connectfy-i18n package in selected projects...\n"
+echo -e "🌐 Updating connectfy-i18n && connectfy-shared package in selected projects...\n"
 
 for project in "${i18n_projects[@]}"; do
   project_path="${BASE_PATH}${project}"
   if [ -d "$project_path" ]; then
-    echo -e "\n📦 Installing latest connectfy-i18n in: $project"
-    cd "$project_path"
-    npm i connectfy-i18n@latest
+    if [ "$project" == "connectfy-shared" ]; then
+      echo -e "\n📦 Installing latest connectfy-i18n in: $project"
+      cd "$project_path"
+      npm i connectfy-i18n@latest
+    else
+      echo -e "\n📦 Installing latest connectfy-i18n && connectfy-shared in: $project"
+      cd "$project_path"
+      npm i connectfy-i18n@latest connectfy-shared@latest
+    fi
   else
     echo -e "\n⚠️  $project does not exist."
   fi

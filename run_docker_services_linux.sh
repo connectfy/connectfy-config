@@ -86,18 +86,18 @@ echo -e "====================================================================\n"
 countdown 5
 
 
-echo -e "Starting connectfy-relationships service in a new Terminal tab...\n"
-gnome-terminal --tab --title="connectfy-relationships" -- bash -c "cd ${path}connectfy-relationships && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f relationships-service; exec bash"
-echo -e "===================================================================="
-echo -e "====================================================================\n"
-countdown 5
-
-
-echo -e "Starting connectfy-messenger service in a new Terminal tab...\n"
-gnome-terminal --tab --title="connectfy-messenger" -- bash -c "cd ${path}connectfy-messenger && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f messenger-service; exec bash"
-echo -e "===================================================================="
-echo -e "====================================================================\n"
-countdown 5
+#echo -e "Starting connectfy-relationships service in a new Terminal tab...\n"
+#gnome-terminal --tab --title="connectfy-relationships" -- bash -c "cd ${path}connectfy-relationships && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f relationships-service; exec bash"
+#echo -e "===================================================================="
+#echo -e "====================================================================\n"
+#countdown 5
+#
+#
+#echo -e "Starting connectfy-messenger service in a new Terminal tab...\n"
+#gnome-terminal --tab --title="connectfy-messenger" -- bash -c "cd ${path}connectfy-messenger && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f messenger-service; exec bash"
+#echo -e "===================================================================="
+#echo -e "====================================================================\n"
+#countdown 5
 
 
 echo -e "Starting connectfy-api-gateway service in a new Terminal tab...\n"

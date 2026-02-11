@@ -30,16 +30,20 @@ services:
       KAFKA_LOG_DIRS: /var/lib/kafka/data
 
       # --- Disable ZK migration (stays KRaft-only) ---
-      KAFKA_ZOOKEEPER_METADATA_MIGRATION_ENABLE: 'false'
+      KAFKA_ZOOKEEPER_METADATA_MIGRATION_ENABLE: "false"
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics --bootstrap-server kafka-0:9092 --list >/dev/null 2>&1"]
+      test:
+        [
+          "CMD-SHELL",
+          "kafka-topics --bootstrap-server kafka-0:9092 --list >/dev/null 2>&1",
+        ]
       interval: 10s
       timeout: 3s
       retries: 15
     volumes:
       - kafka_0_data:/var/lib/kafka/data
     networks:
-      - connectfy_kafka_network
+      - connectfy-kafka-network
 
   kafka-1:
     image: confluentinc/cp-kafka:latest
@@ -69,40 +73,48 @@ services:
       # --- Storage dir ---
       KAFKA_LOG_DIRS: /var/lib/kafka/data
 
-      KAFKA_ZOOKEEPER_METADATA_MIGRATION_ENABLE: 'false'
+      KAFKA_ZOOKEEPER_METADATA_MIGRATION_ENABLE: "false"
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics --bootstrap-server kafka-1:9092 --list >/dev/null 2>&1"]
+      test:
+        [
+          "CMD-SHELL",
+          "kafka-topics --bootstrap-server kafka-1:9092 --list >/dev/null 2>&1",
+        ]
       interval: 10s
       timeout: 3s
       retries: 15
     volumes:
       - kafka_1_data:/var/lib/kafka/data
     networks:
-      - connectfy_kafka_network
+      - connectfy-kafka-network
 
   kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
-      - '8080:8080'
+      - "8080:8080"
     environment:
-      DYNAMIC_CONFIG_ENABLED: 'true'
+      DYNAMIC_CONFIG_ENABLED: "true"
     volumes:
       - ./config.yml:/etc/kafkaui/dynamic_config.yaml
     depends_on:
       - kafka-0
       - kafka-1
     networks:
-      - connectfy_kafka_network
+      - connectfy-kafka-network
     # Use HTTP health endpoint exposed by Kafka UI
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"'"]
+      test:
+        [
+          "CMD-SHELL",
+          'wget -qO- http://localhost:8080/actuator/health | grep -q ''"status":"UP"''',
+        ]
       interval: 30s
       timeout: 10s
       retries: 5
 
 networks:
-  connectfy_kafka_network:
+  connectfy-kafka-network:
     external: true
 
 volumes:

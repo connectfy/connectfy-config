@@ -40,26 +40,15 @@ countdown 5
 
 
 echo -e "Starting Kafka services...\n"
-cd "${path}connectfy-config" && docker compose -f kafka-compose.yml up -d
+cd "${path}connectfy-config" && docker compose -f ./kafka/kafka-compose.yml up -d
 echo -e "Kafka services are now running.\n"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 5
 
-
-# Initialize Kafka topics
-echo -e "Creating Kafka topics...\n"
-cd "${path}connectfy-config" && chmod +x init-topics.sh && ./init-topics.sh
-echo -e "Kafka topics created.\n"
-echo -e "===================================================================="
-echo -e "====================================================================\n"
-countdown 5
-
-
-# Initialize Kafka topics
-# echo -e "Initializing Kafka topics...\n"
-# cd "${path}connectfy-config" && chmod +x init-topics.sh && ./init-topics.sh
-# echo -e "Kafka topics initialized successfully.\n"
+# echo -e "Starting Redis...\n"
+# cd "${path}connectfy-config" && docker compose -f ./redis/redis-compose.yml up -d
+# echo -e "Redis are now running.\n"
 # echo -e "===================================================================="
 # echo -e "====================================================================\n"
 # countdown 5
@@ -112,34 +101,6 @@ gnome-terminal --tab --title="connectfy-client" -- bash -c "cd ${path}connectfy-
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 5
-
-
-# echo -e "Starting Minio service...\n"
-# cd "${path}bmsv2-fileuploader" && docker compose -f minio-compose.yml up -d
-# echo -e "Minio service is now running.\n"
-# echo -e "===================================================================="
-# echo -e "====================================================================\n"
-# countdown 5
-
-
-# echo -e "Starting File Uploader application in a new Terminal tab...\n"
-# gnome-terminal --tab -- bash -c "cd ${path}bmsv2-fileuploader && npx nodemon app.js; exec bash"
-# echo -e "===================================================================="
-# echo -e "====================================================================\n"
-# countdown 5
-
-
-# echo -e "Starting NGROK server in a new Terminal tab...\n"
-# gnome-terminal --tab -- bash -c "cd ${path}bmsv2-fileuploader && ngrok http http://localhost:9003; exec bash"
-# echo -e "===================================================================="
-# echo -e "====================================================================\n"
-# countdown 5
-
-
-# echo -e "Opening Postman application...\n"
-# xdg-open "postman://"
-# echo -e "===================================================================="
-# echo -e "====================================================================\n"
 
 # Final log message
 echo -e "\nAll tasks completed successfully! All services are now running.\n"

@@ -1,128 +1,116 @@
 #!/usr/bin/env bash
-# Creates Kafka topics by exec'ing into a running broker container (Option 2).
-# Reads topics from an external file if provided/exists; falls back to built-in list.
-
 set -euo pipefail
 
-# --- Config ---------------------------------------------------------------
-BROKER_CONTAINER="${BROKER_CONTAINER:-kafka-0}"                 # container name to exec into
-BOOTSTRAP="${BOOTSTRAP:-kafka-0:9092,kafka-1:9092}"             # bootstrap servers (as seen from inside containers)
+# ==============================
+# CONFIG
+# ==============================
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TOPICS_FILE="${TOPICS_FILE:-${SCRIPT_DIR}/topics.txt}"
+
+BROKER_CONTAINER="${BROKER_CONTAINER:-kafka-0}"
+BOOTSTRAP="${BOOTSTRAP:-kafka-0:9092,kafka-1:9092}"
 
 PARTITIONS="${PARTITIONS:-3}"
 REPLICATION="${REPLICATION:-2}"
 READY_TIMEOUT_SEC="${READY_TIMEOUT_SEC:-180}"
 
-# Optional external topics file (one topic per line; '#' comments allowed)
-TOPICS_FILE="${TOPICS_FILE:-./topics.txt}"
+# ==============================
+# LOG HELPERS
+# ==============================
 
-# Built-in fallback topic list
-FALLBACK_TOPICS=(
-  "TEST.TOPIC.NAME"
-)
-# -------------------------------------------------------------------------
+log()  { echo -e "\033[1;34m[INFO]\033[0m  $1"; }
+ok()   { echo -e "\033[1;32m[OK]\033[0m    $1"; }
+warn() { echo -e "\033[1;33m[WARN]\033[0m  $1"; }
+err()  { echo -e "\033[1;31m[ERROR]\033[0m $1"; }
 
-# --- Helpers --------------------------------------------------------------
-require_cmd() {
-  command -v "$1" >/dev/null 2>&1 || {
-    echo "ERROR: '$1' is required but not found in PATH." >&2
-    exit 1
-  }
+# ==============================
+# CHECKS
+# ==============================
+
+command -v docker >/dev/null 2>&1 || {
+  err "Docker not found."
+  exit 1
 }
 
-docker_exec() {
-  docker exec -i "${BROKER_CONTAINER}" "$@"
-}
-
-kafka_topics() {
-  docker_exec kafka-topics "$@"
-}
-
-topic_exists() {
-  topic_name="$1"
-  kafka_topics --bootstrap-server "${BOOTSTRAP}" --list 2>/dev/null | grep -xq "${topic_name}"
-}
-
-first_bootstrap_host() {
-  echo "${BOOTSTRAP}" | awk -F',' '{print $1}'
-}
-
-load_topics_from_file() {
-  local file="$1"
-  local -a loaded=()
-  if [ -f "$file" ]; then
-    while IFS= read -r line || [ -n "$line" ]; do
-      # Trim leading/trailing whitespace
-      line="$(echo "$line" | awk '{$1=$1;print}')"
-      # Skip blanks and comments
-      [ -z "$line" ] && continue
-      case "$line" in
-        \#*) continue ;;
-      esac
-      loaded+=("$line")
-    done < "$file"
-  fi
-
-  # Export as global TOPICS array
-  if [ "${#loaded[@]}" -gt 0 ]; then
-    TOPICS=("${loaded[@]}")
-    echo "Loaded ${#TOPICS[@]} topics from: $file"
-  else
-    TOPICS=("${FALLBACK_TOPICS[@]}")
-    if [ -f "$file" ]; then
-      echo "Warning: '$file' was empty or had only comments. Using fallback topics."
-    else
-      echo "Info: '$file' not found. Using fallback topics."
-    fi
-  fi
-}
-
-# --- Checks ---------------------------------------------------------------
-require_cmd docker
-
-# Ensure container is running
 if ! docker ps --format '{{.Names}}' | grep -qx "${BROKER_CONTAINER}"; then
-  echo "ERROR: Container '${BROKER_CONTAINER}' is not running."
-  echo "       Start your stack (e.g., 'docker compose up -d') and try again."
+  err "Container '${BROKER_CONTAINER}' is not running."
   exit 1
 fi
 
-# Load topics
-load_topics_from_file "${TOPICS_FILE}"
+# ==============================
+# LOAD TOPICS
+# ==============================
 
-echo "Using broker container: ${BROKER_CONTAINER}"
-echo "Bootstrap servers: ${BOOTSTRAP}"
-echo "Partitions: ${PARTITIONS} | Replication: ${REPLICATION}"
+if [ ! -f "${TOPICS_FILE}" ]; then
+  err "topics.txt not found at: ${TOPICS_FILE}"
+  exit 1
+fi
 
-# --- Wait for broker readiness -------------------------------------------
-echo "Waiting for Kafka to become ready (timeout: ${READY_TIMEOUT_SEC}s)..."
+TOPICS=()
+while IFS= read -r line || [ -n "$line" ]; do
+  line="$(echo "$line" | xargs)"   # trim whitespace
+  [[ -z "$line" ]] && continue
+  [[ "$line" =~ ^# ]] && continue
+  TOPICS+=("$line")
+done < "${TOPICS_FILE}"
+
+if [ "${#TOPICS[@]}" -eq 0 ]; then
+  err "topics.txt is empty."
+  exit 1
+fi
+
+log "Loaded ${#TOPICS[@]} topics from topics.txt"
+log "Broker container: ${BROKER_CONTAINER}"
+log "Bootstrap: ${BOOTSTRAP}"
+log "Partitions: ${PARTITIONS} | Replication: ${REPLICATION}"
+
+# ==============================
+# WAIT FOR KAFKA
+# ==============================
+
+log "Waiting for Kafka to become ready..."
+
 deadline=$(($(date +%s) + READY_TIMEOUT_SEC))
-BOOTSTRAP_FIRST="$(first_bootstrap_host)"
+FIRST_BOOTSTRAP="$(echo "${BOOTSTRAP}" | awk -F',' '{print $1}')"
 
 while true; do
-  if kafka_topics --bootstrap-server "${BOOTSTRAP_FIRST}" --list >/dev/null 2>&1; then
-    sleep 3
-    echo "Kafka is ready."
+  if docker exec "${BROKER_CONTAINER}" \
+      kafka-topics --bootstrap-server "${FIRST_BOOTSTRAP}" --list \
+      >/dev/null 2>&1; then
+    ok "Kafka is ready."
     break
   fi
-  now=$(date +%s)
-  if [ "${now}" -ge "${deadline}" ]; then
-    echo "ERROR: Timed out waiting for Kafka readiness." >&2
+
+  if [ "$(date +%s)" -ge "${deadline}" ]; then
+    err "Timed out waiting for Kafka."
     exit 1
   fi
-  echo "  ...not ready yet, retrying in 5s"
+
   sleep 5
 done
 
-# --- Create topics --------------------------------------------------------
+# ==============================
+# HELPERS
+# ==============================
+
+topic_exists() {
+  docker exec "${BROKER_CONTAINER}" \
+    kafka-topics \
+    --bootstrap-server "${BOOTSTRAP}" \
+    --list 2>/dev/null | grep -xq "$1"
+}
+
 create_topic() {
-  topic="$1"
+  local topic="$1"
 
   if topic_exists "${topic}"; then
-    echo "• ${topic} (already exists) — skipped"
+    warn "${topic} already exists — skipped"
     return 0
   fi
 
-  if kafka_topics \
+  if docker exec "${BROKER_CONTAINER}" \
+      kafka-topics \
       --bootstrap-server "${BOOTSTRAP}" \
       --create \
       --topic "${topic}" \
@@ -130,31 +118,36 @@ create_topic() {
       --replication-factor "${REPLICATION}" \
       --if-not-exists >/dev/null 2>&1
   then
-    echo "✔ ${topic}"
+    ok "Created ${topic}"
   else
-    # race-safe recheck
     if topic_exists "${topic}"; then
-      echo "• ${topic} (already existed after race) — skipped"
+      warn "${topic} created in race condition — skipped"
       return 0
     fi
-    echo "✖ Failed to create ${topic}" >&2
+    err "Failed to create ${topic}"
     return 1
   fi
 }
 
+# ==============================
+# CREATE TOPICS
+# ==============================
+
 RC=0
-for t in "${TOPICS[@]}"; do
-  if ! create_topic "$t"; then
+
+for topic in "${TOPICS[@]}"; do
+  if ! create_topic "${topic}"; then
     RC=1
   fi
 done
 
 if [ "${RC}" -eq 0 ]; then
-  echo "All topics created successfully ✅"
+  ok "All topics processed successfully."
 else
-  echo "Finished with some errors. Check logs above. ❗"
+  err "Some topics failed."
 fi
 
+exit "${RC}"
 
 
 

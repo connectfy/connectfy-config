@@ -32,6 +32,8 @@ projects=(
   "connectfy-notifications"
   "connectfy-api-gateway"
   "connectfy-client"
+  "connectfy-i18n"
+  "connectfy-shared"
 )
 
 echo -e "\nStarting git pull for all projects...\n"

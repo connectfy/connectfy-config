@@ -43,7 +43,8 @@ elif [ "$mode_choice" = "2" ]; then
     "connectfy-relationships"
     "connectfy-account"
     "connectfy-notifications"
-    "connectfy-client",
+    "connectfy-client"
+    "connectfy-api-gateway"
     "connectfy-shared"
   )
 

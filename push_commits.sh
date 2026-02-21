@@ -6,7 +6,7 @@ BASE_PATH="/home/$(whoami)/Desktop/Connectfy/"
 ##########################################
 echo "Select operation mode:"
 echo "  1) Commit (custom message)"
-echo "  2) Package (auto i18n commit)"
+echo "  2) Package (auto i18n and shared commit)"
 read -rp "Enter choice (1/2): " mode_choice
 
 ##########################################

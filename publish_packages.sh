@@ -1,6 +1,7 @@
 #!/bin/bash
 
 BASE_PATH="/home/$(whoami)/Desktop/Connectfy"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 ##########################################
 # MODE SELECTION
@@ -10,6 +11,17 @@ echo "  1) connectfy-i18n"
 echo "  2) connectfy-shared"
 echo "  3) both"
 read -rp "Enter choice (1/2/3): " mode_choice
+
+##########################################
+# UPDATE OPTION
+##########################################
+echo "After publish, update packages?"
+echo "  1) Yes (default)"
+echo "  2) No"
+read -rp "Enter choice (1/2): " update_choice
+
+# Default 1
+update_choice=${update_choice:-1}
 
 ##########################################
 # FUNCTION
@@ -79,5 +91,17 @@ case $mode_choice in
     exit 1
     ;;
 esac
+
+##########################################
+# UPDATE PACKAGES
+##########################################
+if [[ "$update_choice" == "1" ]]; then
+  echo ""
+  echo "Running update_packages.sh..."
+  bash "$SCRIPT_DIR/update_packages.sh" || { echo "Update script failed"; exit 1; }
+  echo "Packages updated successfully!"
+else
+  echo "Skipping package update."
+fi
 
 echo "All done 🚀"

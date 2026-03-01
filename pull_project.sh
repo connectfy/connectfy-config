@@ -53,4 +53,4 @@ for item in "${projects[@]}"; do
   else
     echo -e "\n⚠️  $item is not a Git repository or does not exist at: $project_path"
   fi
-donec
+done

@@ -73,7 +73,7 @@ for project in "${projects[@]}"; do
       echo -e "📦 Changes detected — pushing..."
       git add .
       git commit -m "$commit_message"
-      git push origin master
+      git push origin main
       echo -e "✅ Pushed successfully."
     else
       echo -e "⚪ No changes — skipping."

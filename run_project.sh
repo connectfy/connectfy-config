@@ -55,42 +55,42 @@ countdown 5
 
 
 echo -e "Starting connectfy-auth service in a new Terminal tab...\n"
-gnome-terminal --tab --title="auth" -- bash -c "cd ${path}connectfy-auth && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f auth-service; exec bash"
+gnome-terminal --tab --title="auth" -- bash -c "cd ${path}connectfy-auth && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f auth-service"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 5
 
 
 echo -e "Starting connectfy-notification-action-history service in a new Terminal tab...\n"
-gnome-terminal --tab --title="notification-action-history" -- bash -c "cd ${path}connectfy-notification-action-history && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f notification-action-history-service; exec bash"
+gnome-terminal --tab --title="notification-action-history" -- bash -c "cd ${path}connectfy-notification-action-history && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f notification-action-history-service"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 5
 
 
 echo -e "Starting connectfy-account service in a new Terminal tab...\n"
-gnome-terminal --tab --title="account" -- bash -c "cd ${path}connectfy-account && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f account-service; exec bash"
+gnome-terminal --tab --title="account" -- bash -c "cd ${path}connectfy-account && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f account-service"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 5
 
 
 #echo -e "Starting connectfy-relationship service in a new Terminal tab...\n"
-#gnome-terminal --tab --title="relationship" -- bash -c "cd ${path}connectfy-relationship && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f relationship-service; exec bash"
+#gnome-terminal --tab --title="relationship" -- bash -c "cd ${path}connectfy-relationship && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f relationship-service"
 #echo -e "===================================================================="
 #echo -e "====================================================================\n"
 #countdown 5
 #
 #
 #echo -e "Starting connectfy-messenger service in a new Terminal tab...\n"
-#gnome-terminal --tab --title="messenger" -- bash -c "cd ${path}connectfy-messenger && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f messenger-service; exec bash"
+#gnome-terminal --tab --title="messenger" -- bash -c "cd ${path}connectfy-messenger && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f messenger-service"
 #echo -e "===================================================================="
 #echo -e "====================================================================\n"
 #countdown 5
 
 
 echo -e "Starting connectfy-api-gateway service in a new Terminal tab...\n"
-gnome-terminal --tab --title="api-gateway" -- bash -c "cd ${path}connectfy-api-gateway && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f api-gateway; exec bash"
+gnome-terminal --tab --title="api-gateway" -- bash -c "cd ${path}connectfy-api-gateway && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f api-gateway"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 5

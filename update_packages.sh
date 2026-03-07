@@ -3,9 +3,9 @@ BASE_PATH="/home/$(whoami)/Desktop/Connectfy/"
 i18n_projects=(
   "connectfy-auth"
   "connectfy-messenger"
-  "connectfy-relationships"
+  "connectfy-relationship"
   "connectfy-account"
-  "connectfy-notifications"
+  "connectfy-notification-action-history"
   "connectfy-client"
   "connectfy-api-gateway"
 )

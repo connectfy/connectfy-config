@@ -17,9 +17,9 @@ if [ "$mode_choice" = "1" ]; then
   projects=(
     "connectfy-auth"
     "connectfy-messenger"
-    "connectfy-relationships"
+    "connectfy-relationship"
     "connectfy-account"
-    "connectfy-notifications"
+    "connectfy-notification-action-history"
     "connectfy-client"
     "connectfy-i18n"
     "connectfy-api-gateway"
@@ -40,9 +40,9 @@ elif [ "$mode_choice" = "2" ]; then
   projects=(
     "connectfy-auth"
     "connectfy-messenger"
-    "connectfy-relationships"
+    "connectfy-relationship"
     "connectfy-account"
-    "connectfy-notifications"
+    "connectfy-notification-action-history"
     "connectfy-client"
     "connectfy-api-gateway"
     "connectfy-shared"

@@ -55,49 +55,49 @@ countdown 5
 
 
 echo -e "Starting connectfy-auth service in a new Terminal tab...\n"
-gnome-terminal --tab --title="connectfy-auth" -- bash -c "cd ${path}connectfy-auth && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f auth-service; exec bash"
+gnome-terminal --tab --title="auth" -- bash -c "cd ${path}connectfy-auth && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f auth-service; exec bash"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 5
 
 
-echo -e "Starting connectfy-notifications service in a new Terminal tab...\n"
-gnome-terminal --tab --title="connectfy-notifications" -- bash -c "cd ${path}connectfy-notifications && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f notifications-service; exec bash"
+echo -e "Starting connectfy-notification-action-history service in a new Terminal tab...\n"
+gnome-terminal --tab --title="notification-action-history" -- bash -c "cd ${path}connectfy-notification-action-history && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f notification-action-history-service; exec bash"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 5
 
 
 echo -e "Starting connectfy-account service in a new Terminal tab...\n"
-gnome-terminal --tab --title="connectfy-account" -- bash -c "cd ${path}connectfy-account && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f account-service; exec bash"
+gnome-terminal --tab --title="account" -- bash -c "cd ${path}connectfy-account && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f account-service; exec bash"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 5
 
 
-#echo -e "Starting connectfy-relationships service in a new Terminal tab...\n"
-#gnome-terminal --tab --title="connectfy-relationships" -- bash -c "cd ${path}connectfy-relationships && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f relationships-service; exec bash"
+#echo -e "Starting connectfy-relationship service in a new Terminal tab...\n"
+#gnome-terminal --tab --title="relationship" -- bash -c "cd ${path}connectfy-relationship && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f relationship-service; exec bash"
 #echo -e "===================================================================="
 #echo -e "====================================================================\n"
 #countdown 5
 #
 #
 #echo -e "Starting connectfy-messenger service in a new Terminal tab...\n"
-#gnome-terminal --tab --title="connectfy-messenger" -- bash -c "cd ${path}connectfy-messenger && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f messenger-service; exec bash"
+#gnome-terminal --tab --title="messenger" -- bash -c "cd ${path}connectfy-messenger && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f messenger-service; exec bash"
 #echo -e "===================================================================="
 #echo -e "====================================================================\n"
 #countdown 5
 
 
 echo -e "Starting connectfy-api-gateway service in a new Terminal tab...\n"
-gnome-terminal --tab --title="connectfy-api-gateway" -- bash -c "cd ${path}connectfy-api-gateway && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f api-gateway; exec bash"
+gnome-terminal --tab --title="api-gateway" -- bash -c "cd ${path}connectfy-api-gateway && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f api-gateway; exec bash"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 5
 
 
 echo -e "Starting connectfy-client in a new Terminal tab...\n"
-gnome-terminal --tab --title="connectfy-client" -- bash -c "cd ${path}connectfy-client && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f client"
+gnome-terminal --tab --title="client" -- bash -c "cd ${path}connectfy-client && docker compose -f docker-compose.dev.yml up -d --build && docker compose -f docker-compose.dev.yml logs -f client"
 echo -e "===================================================================="
 echo -e "====================================================================\n"
 countdown 5

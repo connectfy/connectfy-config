@@ -1,3 +1,5 @@
+#!/bin/bash
+
 BASE_PATH="/home/$(whoami)/Desktop/Connectfy/"
 
 i18n_projects=(

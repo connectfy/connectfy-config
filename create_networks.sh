@@ -1,21 +1,21 @@
 #!/bin/bash
-create_network() {
-  local name="$1"
 
-  if docker network inspect "$name" >/dev/null 2>&1; then
-    echo "Network '$name' already exists. Skipping."
+create_network () {
+  local NETWORK_NAME=$1
+
+  if docker network inspect $NETWORK_NAME >/dev/null 2>&1; then
+    echo "✔ Network $NETWORK_NAME already exists"
   else
-    echo "Creating network '$name'..."
-    docker network create "$name"
+    echo "🚀 Creating network $NETWORK_NAME"
+    docker network create $NETWORK_NAME
   fi
 }
 
-create_network "connectfy-kafka-network"
-create_network "connectfy-api-gateway-network"
-create_network "connectfy-auth-network"
-create_network "connectfy-messenger-network"
-create_network "connectfy-relationship-network"
-create_network "connectfy-account-network"
-create_network "connectfy-notification-action-history-network"
-create_network "connectfy-file-service-network"
+create_network connectfy-core-network
+create_network connectfy-kafka-network
 
+create_network auth-db-network
+create_network account-db-network
+create_network notification-db-network
+
+echo "All networks ready."

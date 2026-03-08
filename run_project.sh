@@ -49,7 +49,11 @@ countdown 2
 
 echo -e "Starting Kafka..."
 cd "${BASE_PATH}connectfy-config" && docker compose -f ./kafka/kafka-compose.yml up -d
-countdown 5
+countdown 10
+
+echo -e "Starting Redis..."
+cd "${BASE_PATH}connectfy-config" && docker compose -f ./redis/redis-compose.yml up -d
+countdown 10
 
 # --- Servisləri Sıra ilə Başlat ---
 # Format: start_service "Tab Başlığı" "Qovluq Adı" "Docker Service Adı"

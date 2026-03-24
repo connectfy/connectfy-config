@@ -19,9 +19,7 @@ containers=(
   "connectfy-notification-action-history-mongo-dev"
   "connectfy-auth-service-dev"
   "connectfy-auth-mongo-dev"
-  "kafka-ui"
-  "kafka-0"
-  "kafka-1"
+  "connectfy-file-uploader-dev"
 )
 
 echo -e "\n==============================="

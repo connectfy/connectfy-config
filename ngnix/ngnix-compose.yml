@@ -12,6 +12,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - connectfy-file-service-network
+      - connectfy-kafka-network
 
 volumes:
   minio_data:
@@ -19,5 +20,5 @@ volumes:
 networks:
   connectfy-file-service-network:
     external: true
-  kafka_network:
+  connectfy-kafka-network:
     external: true

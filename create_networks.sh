@@ -14,9 +14,11 @@ create_network () {
 create_network connectfy-core-network
 create_network connectfy-kafka-network
 create_network connectfy-redis-network
+create_network connectfy-file-service-network
 
 create_network auth-db-network
 create_network account-db-network
 create_network notification-db-network
+
 
 echo "All networks ready."

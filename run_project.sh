@@ -61,6 +61,7 @@ countdown 10
 start_service "auth" "connectfy-auth" "auth-service"
 start_service "notification" "connectfy-notification-action-history" "notification-action-history-service"
 start_service "account" "connectfy-account" "account-service"
+start_service "relationship" "connectfy-relationship" "relationship-service"
 start_service "file-uploader" "connectfy-file-uploader" "file-uploader"
 start_service "api-gateway" "connectfy-api-gateway" "api-gateway"
 start_service "client" "connectfy-client" "client"

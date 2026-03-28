@@ -1,4 +1,5 @@
 mail.send
 
+profile.username.update
 profile.file.delete
 profile.photo.uploaded

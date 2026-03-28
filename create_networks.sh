@@ -19,6 +19,6 @@ create_network connectfy-file-service-network
 create_network auth-db-network
 create_network account-db-network
 create_network notification-db-network
-
+create_network relationship-db-network
 
 echo "All networks ready."

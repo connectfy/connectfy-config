@@ -1,5 +1,13 @@
 mail.send
 
-profile.username.update
+projection.user.created
+projection.user.updated
+projection.user.removed
+
+account.notification-settings.remove
+account.general-settings.remove
+account.privacy-settings.remove
+
+
 profile.file.delete
 profile.photo.uploaded
